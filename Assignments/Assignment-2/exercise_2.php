@@ -17,7 +17,7 @@ facilisis ultrices rhoncus. Nullam in euismod nisl. Donec pulvinar ex sit amet a
 // Logic to concatenate to get 3 para in one string variable
 for ($i=0; $i<3;$i++){
 	$paragrphToBeInjected.=$paragraphProvided;
-    $paragrphToBeInjected.="<br>";
+    $paragrphToBeInjected.="<br><br>";
 }
 
 ?>
