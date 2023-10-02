@@ -1,20 +1,21 @@
 <?php
 
 // Declaration and initialization of variables
-$list="<ul>";
+$list="<ul style=\"list-style-type: disc\">";
 $parentList=4;
 $subList=5;
 
 // Logic for creating the required list
 for ($parentListItem=1; $parentListItem<=$parentList; $parentListItem++){
     $list.="<li> {$parentListItem} </li>";
-    $list.="<ul>";
+    $list.="<ul style=\"list-style-type: circle\">";
     for ($subListItem=1; $subListItem<=$subList; $subListItem++){
         $list.="<li> {$subListItem} </li>";
     }
     $list.="</ul>";
 }
 $list.="</ul>";
+
 ?>
 
 <!DOCTYPE html>

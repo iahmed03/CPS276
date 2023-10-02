@@ -14,6 +14,7 @@ for ($row=1; $row<=$numberOfRows; $row++){
     $table.="</tr>";
 }
 $table.="</table>";
+
 ?>
 
 <!DOCTYPE html>
