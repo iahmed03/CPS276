@@ -1,25 +1,27 @@
 <?php
+
+// Declaration and intialization of variables
 $title="Web Page";
 $heading="My Web Page";
 $name="Ishaq Ahmed";
 $footer="My Web Page@2018";
 $paragrphToBeInjected="";
-$paragraphProvided=<<<STR
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus feugiat mollis 
+$paragraphProvided="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus feugiat mollis 
 dolor at bibendum. In congue maximus ligula, ut faucibus mi accumsan at. Vestibulum sagittis
 tortor eget dui ultricies, a vulputate lacus faucibus. Fusce aliquet bibendum erat, sed bibendum
 eros cursus eu. Nulla at neque rhoncus, ultricies odio at, accumsan elit. Proin in turpis eu leo
 dapibus pulvinar. Vivamus viverra massa ut enim fringilla ultricies. Donec in enim blandit, iaculis
 nulla quis, egestas elit. Nullam ut enim id erat bibendum finibus nec ac eros. Nulla malesuada ex
-facilisis ultrices rhoncus. Nullam in euismod nisl. Donec pulvinar ex sit amet aliquet egestas.
-STR;
+facilisis ultrices rhoncus. Nullam in euismod nisl. Donec pulvinar ex sit amet aliquet egestas.";
 
+// Logic to concatenate to get 3 para in one string variable
 for ($i=0; $i<3;$i++){
 	$paragrphToBeInjected.=$paragraphProvided;
-    $paragrphToBeInjected.="<br><br>";
+    $paragrphToBeInjected.="<br>";
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
