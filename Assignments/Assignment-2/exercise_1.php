@@ -2,15 +2,15 @@
 
 // Declaration and initialization of variables
 $list="<ul>";
-$parentListItems=4;
-$subListItems=5;
+$parentList=4;
+$subList=5;
 
 // Logic for creating the required list
-for ($parentList=1; $parentList<=$parentListItems; $parentList++){
-    $list.="<li> {$parentList} </li>";
+for ($parentListItem=1; $parentListItem<=$parentList; $parentListItem++){
+    $list.="<li> {$parentListItem} </li>";
     $list.="<ul>";
-    for ($subList=1; $subList<=$subListItems; $subList++){
-        $list.="<li> {$subList} </li>";
+    for ($subListItem=1; $subListItem<=$subList; $subListItem++){
+        $list.="<li> {$subListItem} </li>";
     }
     $list.="</ul>";
 }
