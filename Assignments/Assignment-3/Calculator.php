@@ -2,7 +2,7 @@
 
  class Calculator{
 
-    // Declaration and intialization of variables
+    // Declaration and intialization of variables (not used in the logic but created for better understanding. To populate the data if constructor with parameters is created; changing how this code is used for calculation)
     private $operator="";
     private $num1=0;
     private $num2=0;
