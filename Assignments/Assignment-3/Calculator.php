@@ -6,26 +6,25 @@
     private $operator="";
     private $num1=0;
     private $num2=0;
-    private $result="";
 
     public function calc($operator="error", $num1="error", $num2="error"){
-        global $result;
-
-        // logic to calculate the numbers based on the appropriate arthimetic operator.
+        $result="";
+        
+        // logic to calculate the numbers based on the appropriate arthimetic operator. Outputting error messages if wrong data assigned.
         if ($operator!=="error" && $num1!=="error" && $num2!=="error"){
             if ($num2!==0){
                 switch($operator){
                     case "+":
-                        $result="The sum of the two numbers is ".$num1+$num2."<br />";
+                        $result="The sum of the numbers is ".$num1+$num2."<br />";
                         break;
                     case "-":
-                        $result="The difference of the two numbers is ".$num1-$num2."<br />";
+                        $result="The difference of the numbers is ".$num1-$num2."<br />";
                         break;
                     case "/":
-                        $result="The division of the two numbers is ".$num1/$num2."<br />";
+                        $result="The division of the numbers is ".$num1/$num2."<br />";
                         break;
                     case "*":
-                        $result="The product of the two numbers is ".$num1+$num2."<br />";
+                        $result="The product of the numbers is ".$num1+$num2."<br />";
                         break;    
                 }
             }
@@ -40,6 +39,6 @@
         return $result;
     }
 }
-
+ 
 
 ?>
