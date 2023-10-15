@@ -1,5 +1,10 @@
 <?php
+
+//  DEECLARATION OF THE VARIABLE
 $output="";
+
+// LOGIC TO EXECUTE IF SOME VALUE IS PASSED ON TO SERVER VIA POST METHOD.
+// LOGIC TESTS WHICH BUTTON IS CLICKED AND THUS CARRYOUT THE RESPECTIVE FEATURE
 if(count($_POST) > 0){
     require_once 'AddName.php';
     $addName = new AddName();
@@ -12,6 +17,7 @@ if(count($_POST) > 0){
     }
     $output = $addName->display_name_list();
    }
+
 ?>
 
 <!DOCTYPE html>
