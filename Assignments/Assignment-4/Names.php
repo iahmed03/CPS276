@@ -4,18 +4,10 @@
 $output="";
 
 // LOGIC TO EXECUTE IF SOME VALUE IS PASSED ON TO SERVER VIA POST METHOD.
-// LOGIC TESTS WHICH BUTTON IS CLICKED AND THUS CARRYOUT THE RESPECTIVE FEATURE
 if(count($_POST) > 0){
     require_once 'AddName.php';
     $addName = new AddName();
-    echo $addName->display_name_list();
-    if (isset($_POST["addName"])){
-        $addName->add_name($_POST["name"], $_POST["namelist"]);
-    }
-    else if(isset($_POST["clearName"])){
-        $addName->clear_names();
-    }
-    $output = $addName->display_name_list();
+    $output = $addName->display_name_list($_POST);
    }
 
 ?>
@@ -31,23 +23,35 @@ if(count($_POST) > 0){
 </head>
 <body>
 <div class="container">
-    <h1>Add Names</h1>
+    <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+            <h1>Add Names</h1>
+        </div>
+    </div>
     <form action="Names.php" method="post">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary" name="addName">Add name</button>
-            <button type="submit" class="btn btn-primary" name="clearName">Clear names</button>
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+                <button type="submit" class="btn btn-primary" name="addName">Add name</button>
+                <button type="submit" class="btn btn-primary" name="clearName">Clear names</button>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="name" class="form-label">Enter Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name">
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+                <label for="name" class="form-label">Enter Name</label>
+                <input type="text" class="form-control mb-3" id="name" name="name" placeholder="Enter Name">
+            </div>
         </div>
-        <div class="mb-3">
-             <label for="nameList" class="form-label">List of names</label>
-             <textarea style="height: 500px;" class="form-control" 
-             id="nameList" name="namelist"><?php echo $output ?></textarea>
-
-        </div>    
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+                <label for="nameList" class="form-label">List of names</label>
+                <textarea style="height: 400px;" class="form-control mb-3" 
+                    id="nameList" name="namelist"><?php echo $output ?></textarea>
+            </div>
+        </div>
     </form>
 </div>
+
+
+
 </body>
 </html>

@@ -24,8 +24,14 @@ class AddName {
         $this->namelist = "";
     }
     
-    // FUNCTION TO OUTPUT THE NAMELIST IN THE TETABOX
-    public function display_name_list(){
+    // FUNCTION TO TEST WHICH BUTTON IS CLICKED OUTPUT THE RESULT RESPECTIVELY
+    public function display_name_list($postVal){
+        if (isset($postVal["addName"])){
+            $this->add_name($postVal["name"], $postVal["namelist"]);
+        }
+        else if(isset($postVal["clearName"])){
+            $this->clear_names();
+        }
         return $this->namelist;
     }
 }
