@@ -50,7 +50,7 @@ if(count($_POST) > 0){
         </div>
         <div class="row">
             <div class="col-sm-8 offset-sm-2">
-                <button type="submit" class="btn btn-primary" name="clearName">Submit</button>
+                <button type="submit" class="btn btn-primary" name="submitForm">Submit</button>
             </div>
         </div>
     </form>
