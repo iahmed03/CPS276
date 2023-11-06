@@ -29,7 +29,7 @@ $arr = $fileProc->init();
         </div>
         <div class="mb-3">
             <label for="file_path" class="form-label">Choose File:</label>
-            <input class="form-control" type="file" name="file_path">
+            <input class="form-control" type="file" name="file_path" id="file_path">
         </div>
         <div class="mb-3">
             <input type="submit" class="btn btn-primary" name="uploadFile" value="Upload File">

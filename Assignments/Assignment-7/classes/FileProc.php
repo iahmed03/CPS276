@@ -40,13 +40,18 @@ class FileProc extends PdoMethods{
         }
     
         //IF ALL GOES WELL MOVE FILE FROM TEMP LCOATION TO THE 'Files' DIRECTORY 
-        elseif (!move_uploaded_file( $_FILES["file_path"]["tmp_name"], "files/" . $_FILES["file_path"]["name"])){
+        elseif (!move_uploaded_file( $_FILES["file_path"]["tmp_name"], "files/" . $_POST["fileName"])){
             $output= "Could not move file";
         }
 
         // IF ALL GOES WELL ADDFILE FUNCTION IS CALLED WHICH ADD FILENAME AND FILEPATH TO THE DATABASE
-        else {	
-            $output=$this->addFile();
+        else {
+            if (!$this->checkRecord()){
+                $output=$this->addFile();
+            }
+            else{
+                $output="File has been added";
+            }
         } 
         
     }
@@ -89,7 +94,7 @@ class FileProc extends PdoMethods{
 	    // THESE BINDINGS ARE LATER INJECTED INTO THE SQL STATEMENT THIS PREVENTS AGAIN SQL INJECTIONS
 	    $bindings = [
 			[':fileName',$_POST['fileName'],'str'],
-			[':file_path',"files/" . $_FILES["file_path"]["name"],'str'],
+			[':file_path',"files/" . $_POST["fileName"],'str'],
 		];
 
 		// I AM CALLING THE OTHERBINDED METHOD FROM MY PDO CLASS
@@ -124,5 +129,34 @@ class FileProc extends PdoMethods{
 		return $list;
 	}
 
+    // FUNCTION TO PREVENT DUPLICATE ENTRIES OF FILE INTO THE DATABASE.
+    private function checkRecord(){
+        // CREATE AN INSTANCE OF THE PDOMETHODS CLASS
+		$pdo = new PdoMethods();
+
+		// CREATE THE SQL
+		$sql = "SELECT * FROM file_info";
+
+		//PROCESS THE SQL AND GET THE RESULTS
+		$records = $pdo->selectNotBinded($sql);
+
+		// IF THERE WAS AN ERROR DISPLAY MESSAGE
+		if($records == 'error'){
+			return 'There has been and error while retriving file info';
+		}
+		else {
+            if(count($records) != 0){
+                foreach ($records as $row){
+                    if ($row['fileName']==$_POST["fileName"]){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+        }
+        }
+
+    }
 }
 
