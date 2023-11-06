@@ -4,17 +4,19 @@ require_once "PdoMethods.php";
 
 class FileProc extends PdoMethods{
 
-
+    // DECLARATION OF VARIABLE USED FOR STORING VARIOUS ERROR MESSAGES.
     private $output;
 
-    public function fileUpload(){
+    // PRIMARY FUNCTION THAT IS CALLED FROM INNIT FUNCTION THAT STARTS THE PROCESSING FOR THE FILE AND RETURNS APPROPRIATE ERROR MESSAGE OR NO MESSAGE IF THE FILE UPLOAD PROCESS WAS SUCCESSFULL TO DATABASE
+    private function fileUpload(){
         
         global $output;
-        $output=$this->processFile();
+        $this->processFile();
         return $output;
 
     }
     
+    // FUNCTION THAT PROCESSES THE FILE FOR VARIOUS ERROR MESSAGES
     private function processFile(){
 	
         global $output;
@@ -32,24 +34,25 @@ class FileProc extends PdoMethods{
             $output= "The file is too large";
         }
     
-        //CHECK TO MAKE SURE IT IS THE CORRECT FILE TYPE IN THIS CASE JPEG OR PNG
+        //CHECK TO MAKE SURE IT IS THE CORRECT FILE TYPE IN THIS CASE PDF
         elseif ($_FILES["file_path"]["type"] != "application/pdf") {
             $output= "pdf files only";
         }
     
-        //IF ALL GOES WELL MOVE FILE FROM TEMP LCOATION TO THE PHOTOS DIRECTORY 
+        //IF ALL GOES WELL MOVE FILE FROM TEMP LCOATION TO THE 'Files' DIRECTORY 
         elseif (!move_uploaded_file( $_FILES["file_path"]["tmp_name"], "files/" . $_FILES["file_path"]["name"])){
             $output= "Could not move file";
         }
-        else {
-            //IF ALL GOES WELL CALL DISPLAY THANKS METHOD	
+
+        // IF ALL GOES WELL ADDFILE FUNCTION IS CALLED WHICH ADD FILENAME AND FILEPATH TO THE DATABASE
+        else {	
             $output=$this->addFile();
         } 
         
-        return $output;
     }
 
-    public function displayList(){
+    // FUNCTION THAT RETRIVES THE INFO FROM THE DATABASE AND DISPLAYS IN IN THE FORM OF LIST
+    private function displayList(){
 		
 		// CREATE AN INSTANCE OF THE PDOMETHODS CLASS
 		$pdo = new PdoMethods();
@@ -74,6 +77,7 @@ class FileProc extends PdoMethods{
 		}
 	}
 
+    // FUNCTION THAT ADD FILE TO THE DATABASE
     private function addFile(){
 	
 		$pdo = new PdoMethods();
@@ -100,15 +104,17 @@ class FileProc extends PdoMethods{
 		}
 	}
 
+    // FUNCTION THAT MARKS THE START OF THE WEBPAGE(LOADING AND ON SUBMITTING PAGE)
     public function init(){
         if(count($_POST) > 0){
             return [$this->fileUpload(), $this->displayList()];
         }
         else {
-             return "ok";
+            return ["", $this->displayList()];
         } 
     } 
 
+    // FUNCTION THAT ITERATES THROUGHT THE LIST OF RECORDS RETRIEVED FROM THE DATABASE.
     private function createList($records){
 		$list = '<ol>';
 		foreach ($records as $row){

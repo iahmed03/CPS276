@@ -17,8 +17,8 @@ $arr = $fileProc->init();
 <body>
 <div class="container">
     <div class="mb-3">
-        <h1 align="center">File Upload and Display</h1>
-        <h2>Upload File</h2>
+        <h1 style="font-weight: normal" align="center">File Upload and Display</h1>
+        <h2 style="font-weight: normal">Upload File</h2>
         <p><?php echo $arr[0];?></p>
     </div>
 
@@ -28,13 +28,14 @@ $arr = $fileProc->init();
             <input class="form-control" type="text" class="form-control mb-3" id="fileName" name="fileName">
         </div>
         <div class="mb-3">
+            <label for="file_path" class="form-label">Choose File:</label>
             <input class="form-control" type="file" name="file_path">
         </div>
         <div class="mb-3">
-            <input type="submit" class="btn btn-primary" name="uploadFile">
+            <input type="submit" class="btn btn-primary" name="uploadFile" value="Upload File">
         </div>
         <div class="mb-3">
-                <h2>Display File List</h2>
+                <h2 style="font-weight: normal">Display File List</h2>
             <p><?php echo $arr[1] ?></p>
         </div>
     </form>
