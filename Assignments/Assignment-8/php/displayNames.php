@@ -23,7 +23,6 @@
         exit;
     }
     else {
-        if(count($records) != 0){
             $list = "";
             foreach ($records as $row){
                 $list .= "<p>{$row['name']}</p>";
@@ -33,6 +32,5 @@
                 'names' => $list,
               ];
               echo json_encode($response);
-        }
     }
 ?>

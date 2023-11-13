@@ -21,7 +21,7 @@
     else {
         $response = (object) [
             'masterstatus' => 'success',
-            'msg' => "database cleared",
+            'msg' => "All names were deleted",
           ];
           echo json_encode($response);
     }

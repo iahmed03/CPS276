@@ -19,7 +19,7 @@
 
     // FUNCTION THAT FORMATS THE NAME SUCH THAT LASTNAME IS WRITTEN BEFORE FIRSTNMAE
     $arrName = explode(" ", $data->name);
-    $name_to_be_added = $arrName[1].", ".$arrName[0]."\n";
+    $name_to_be_added = $arrName[1].", ".$arrName[0];
 
     $pdo = new PdoMethods();
 
@@ -41,7 +41,7 @@
 	else {
 		$response = (object) [
             'masterstatus' => 'success',
-            'msg' => "name added",
+            'msg' => "Name has been added",
           ];
           echo json_encode($response);
 	}
