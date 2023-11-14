@@ -6,7 +6,7 @@
     $pdo = new PdoMethods();
 
     // CREATE THE SQL
-    $sql = "SELECT * FROM names";
+    $sql = "SELECT * FROM names ORDER BY name";
 
     //PROCESS THE SQL AND GET THE RESULTS
     $records = $pdo->selectNotBinded($sql);
