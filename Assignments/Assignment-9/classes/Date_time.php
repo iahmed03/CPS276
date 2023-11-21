@@ -72,7 +72,12 @@ Class Date_time {
                 }
             }
             elseif(isset($_POST["getNotes"])){
-                return $this->getData($_POST["begDate"], $_POST["endDate"]);
+                if ($_POST["begDate"]!=null && $_POST["endDate"]!=null){
+                    return $this->getData($_POST["begDate"], $_POST["endDate"]);
+                }
+                else{
+                    return "Enter Beginning and ending date";
+                }
             }
         }
     }
