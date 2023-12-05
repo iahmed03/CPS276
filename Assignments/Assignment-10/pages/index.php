@@ -20,7 +20,7 @@ require_once '../Controller/routes.php';
       <?php 
         echo "<h1>{$pageData['heading']}</h1>";
         echo $pageData['nav'];
-        echo $pageData['content'];
+        print_r($pageData['content']);
       ?>
     </div>
       <?php echo $pageData['js']; ?>

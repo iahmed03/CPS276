@@ -1,6 +1,8 @@
 <?php
 require_once '../classes/Crud.php';
 require_once '../classes/Page.php';
+require_once '../pages/addContact.php';
+
 
 function login(){
 
@@ -31,14 +33,12 @@ function home(){
 }
 
 function addContact(){
-    require_once '../pages/addContact.php';
 	//$nameList = getNames('list');
 	$page = new Page();
-
 	$pageData['title'] = "Add Contact";
 	$pageData['heading'] = "Add Contact";
 	$pageData['nav'] = $page->nav();
-	$pageData['content'] = init();
+	$pageData['content'] = init_addContact();
 	$pageData['js'] = "";
 	return $pageData;
 }

@@ -2,8 +2,7 @@
 
 /* HERE I REQUIRE AND USE THE STICKYFORM CLASS THAT DOES ALL THE VALIDATION AND CREATES THE STICKY FORM.  THE STICKY FORM CLASS USES THE VALIDATION CLASS TO DO THE VALIDATION WORK.*/
 
-require_once('../classes/StickyForm.php');
-    $stickyForm = new StickyForm();
+
 
 
 /* THIS IS THE DATA OF THE FORM.  IT IS A MULTI-DIMENTIONAL ASSOCIATIVE ARRAY THAT IS USED TO CONTAIN FORM DATA AND ERROR MESSAGES.   EACH SUB ARRAY IS NAMED BASED UPON WHAT FORM FIELD IT IS ATTACHED TO. FOR EXAMPLE, "NAME" GOES TO THE TEXT FIELDS WITH THE NAME ATTRIBUTE THAT HAS THE VALUE OF "NAME". NOTICE THE TYPE IS "TEXT" FOR TEXT FIELD.  DEPENDING ON WHAT HAPPENS THIS ASSOCIATE ARRAY IS UPDATED.*/
@@ -70,6 +69,7 @@ $elementsArr = [
       "contacts"=>[
         "type"=>"checkbox",
         "action"=>"notRequired",
+        "selected"=>"",
         "status"=>["Newsletter"=>"", "Email Updates"=>"", "Text Updates"=>""]
       ],
 
@@ -83,14 +83,91 @@ $elementsArr = [
   ];
 
 /*THE INIT FUNCTION IS WRITTEN TO START EVERYTHING OFF IT IS CALLED FROM THE INDEX.PHP PAGE */
-function init_addContact(){
-    global $elementsArr, $stickyForm;
+function init(){
+    require_once('../classes/StickyForm.php');
+    $stickyForm = new StickyForm();
+    $elementsArr = [
+        "masterStatus"=>[
+          "status"=>"noerrors",
+          "type"=>"masterStatus"
+        ],
+          "name"=>[
+            "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Name cannot be blank and must be a standard name</span>",
+          "errorOutput"=>"",
+          "type"=>"text",
+          "value"=>"Scott",
+              "regex"=>"name"
+          ],
+          "address"=>[
+            "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Address cannot be blank and must start with numbers</span>",
+            "errorOutput"=>"",
+            "type"=>"text",
+            "value"=>"123 street",
+            "regex"=>"address"
+          ],
+
+          "city"=>[
+            "errorMessage"=>"<span style='color: red; margin-left: 15px;'>city cannot be blank</span>",
+            "errorOutput"=>"",
+            "type"=>"text",
+            "value"=>"anywhere",
+            "regex"=>"city"
+          ],
+
+          "state"=>[
+            "type"=>"select",
+            "options"=>["mi"=>"Michigan","oh"=>"Ohio","pa"=>"Pennslyvania","tx"=>"Texas"],
+                "selected"=>"oh",
+                "regex"=>"state"
+            ],
+
+          "phone"=>[
+              "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Phone cannot be blank and must be a valid phone number</span>",
+          "errorOutput"=>"",
+          "type"=>"text",
+              "value"=>"999.999.9999",
+              "regex"=>"phone"
+        ],
+        
+        "email"=>[
+            "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot be blank</span>",
+            "errorOutput"=>"",
+            "type"=>"text",
+            "value"=>"iahmed3@test.com",
+            "regex"=>"email"
+          ],
+
+          "dob"=>[
+            "errorMessage"=>"<span style='color: red; margin-left: 15px;'>must be of format mm/dd/yyyy</span>",
+            "errorOutput"=>"",
+            "type"=>"text",
+            "value"=>"12/25/1999",
+            "regex"=>"dob"
+          ],
+
+          "contacts"=>[
+            "type"=>"checkbox",
+            "action"=>"notRequired",
+            "selected"=>"",
+            "status"=>["Newsletter"=>"", "Email Updates"=>"", "Text Updates"=>""]
+          ],
+
+          "age"=>[
+            "errorMessage"=>"<span style='color: red; margin-left: 15px;'>You must select at least one option</span>",
+            "errorOutput"=>"",
+            "action"=>"required",
+            "type"=>"radio",
+            "value"=>["10-18"=>"", "19-30"=>"", "30-50"=>"", "51+"=>""]
+          ]
+      ];
+    
+
   /* IF THE FORM WAS SUBMITTED DO THE FOLLOWING  */
   if(isset($_POST['submit'])){
 
     /*THIS METHODS TAKE THE POST ARRAY AND THE ELEMENTS ARRAY (SEE BELOW) AND PASSES THEM TO THE VALIDATION FORM METHOD OF THE STICKY FORM CLASS.  IT UPDATES THE ELEMENTS ARRAY AND RETURNS IT, THIS IS STORED IN THE $postArr VARIABLE */
     $postArr = $stickyForm->validateForm($_POST, $elementsArr);
-    return $postArr;
+
     /* THE ELEMENTS ARRAY HAS A MASTER STATUS AREA. IF THERE ARE ANY ERRORS FOUND THE STATUS IS CHANGED TO "ERRORS" FROM THE DEFAULT OF "NOERRORS".  DEPENDING ON WHAT IS RETURNED DEPENDS ON WHAT HAPPENS NEXT.  IN THIS CASE THE RETURN MESSAGE HAS "NO ERRORS" SO WE HAVE NO PROBLEMS WITH OUR VALIDATION AND WE CAN SUBMIT THE FORM */
     if($postArr['masterStatus']['status'] == "noerrors"){
       
@@ -113,7 +190,7 @@ function init_addContact(){
 
 /*THIS FUNCTION CAN BE CALLED TO ADD DATA TO THE DATABASE */
 function addData($post){
-    global $elementsArr, $stickyForm;
+    global $elementsArr;
     return getForm("<p>Contact Information Added</p>", $elementsArr);
   /* IF EVERYTHING WORKS ADD THE DATA HERE TO THE DATABASE HERE USING THE $_POST SUPER GLOBAL ARRAY */
       //print_r($_POST);
@@ -170,7 +247,9 @@ function addData($post){
 
 /*THIS IS THEGET FROM FUCTION WHICH WILL BUILD THE FORM BASED UPON UPON THE (UNMODIFIED OF MODIFIED) ELEMENTS ARRAY. */
 function getForm($acknowledgement, $elementsArr){
-    global $elementsArr, $stickyForm;
+
+    require_once('../classes/StickyForm.php');
+    $stickyForm = new StickyForm();
 $options = $stickyForm->createOptions($elementsArr['state']);
 
 /* THIS IS A HEREDOC STRING WHICH CREATES THE FORM AND ADD THE APPROPRIATE VALUES AND ERROR MESSAGES */
@@ -209,15 +288,15 @@ $form = <<<HTML
 
     <p>Please check all contact types you would like (Optional)</p>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" name="contacts[]" id="contact1" value="Newsletter" {$elementsArr['contacts']['status']['Newsletter']}>
+      <input class="form-check-input" type="checkbox" name="contacts[]" id="contact1" value="Newsletter">
       <label class="form-check-label" for="contact1">Newsletter</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" name="contacts[]" id="contact2" value="Email Updates" {$elementsArr['contacts']['status']['Email Updates']}>
+      <input class="form-check-input" type="checkbox" name="contacts[]" id="contact2" value="Email Updates">
       <label class="form-check-label" for="contact2">Email Updates</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" name="contacts[]" id="contact3" value="Text Updates" {$elementsArr['contacts']['status']['Text Updates']}>
+      <input class="form-check-input" type="checkbox" name="contacts[]" id="contact3" value="Text Updates">
       <label class="form-check-label" for="contact3">Text Updates</label>
     </div>
         
@@ -225,22 +304,22 @@ $form = <<<HTML
     <p>Please select an age range (you must select one):</p>
     {$elementsArr['age']['errorOutput']}
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="age" id="age1" value="10-18" {$elementsArr['age']['value']['10-18']}>
+      <input class="form-check-input" type="radio" name="age" id="age1" value="10-19">
       <label class="form-check-label" for="age1">10-18</label>
     </div>
 
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="age" id="age2" value="19-30" {$elementsArr['age']['value']['19-30']}>
+      <input class="form-check-input" type="radio" name="age" id="age2" value="19-30">
       <label class="form-check-label" for="age2">19-30</label>
     </div>
 
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="age" id="age3" value="30-50" {$elementsArr['age']['value']['30-50']}>
+      <input class="form-check-input" type="radio" name="age" id="age3" value="30-50">
       <label class="form-check-label" for="age3">30-50</label>
     </div>
 
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="age" id="age4" value="51+" {$elementsArr['age']['value']['51+']}>
+      <input class="form-check-input" type="radio" name="age" id="age4" value="51+">
       <label class="form-check-label" for="age4">51+</label>
     </div>
 
