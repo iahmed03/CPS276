@@ -10,7 +10,7 @@ class Validation{
 		switch($regex){
 			case "name": return $this->name($value); break;
             case "address": return $this->address($value); break;
-            case "city": return $this->address($value); break;
+            case "city": return $this->city($value); break;
 			case "phone": return $this->phone($value); break;
             case "email": return $this->email($value); break;
             case "dob": return $this->dob($value); break;
@@ -29,7 +29,7 @@ class Validation{
 	}
 
     private function address($value){
-		$match = preg_match('/^\d+[a-zA-Z\s]*$/', $value);
+		$match = preg_match('/^\d+\s.*[a-zA-Z]$/', $value);
 		return $this->setError($match);
 	}
 

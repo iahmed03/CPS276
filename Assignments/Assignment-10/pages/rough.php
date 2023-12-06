@@ -1,8 +1,9 @@
 <?php
 
-require_once 'addContact.php';
+require_once '../classes/Validations.php';
 
-$var=init();
+$var= new Validation();
 
-print_r($var);
+
+print_r($var->checkFormat("2023sdf134@gmail.com", "email"));
 ?>
