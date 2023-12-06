@@ -1,9 +1,9 @@
 <?php
 
-require_once '../classes/Validations.php';
+require_once '../classes/Crud.php';
 
-$var= new Validation();
+$var= new Crud();
 
 
-print_r($var->checkFormat("2023sdf134@gmail.com", "email"));
+print_r($var->getTableData("Contacts"));
 ?>

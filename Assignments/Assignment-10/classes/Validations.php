@@ -15,6 +15,7 @@ class Validation{
             case "email": return $this->email($value); break;
             case "dob": return $this->dob($value); break;
             case "password": return $this->password($value); break;
+            default: return "something wrong"; break;
 			
 			
 		}

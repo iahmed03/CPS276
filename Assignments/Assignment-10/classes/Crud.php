@@ -5,7 +5,7 @@ class Crud extends PdoMethods{
 
 
 	//THIS HAS TO BE PUBLIC BECAUSE INDEX.PHP AND UPDATE_DELETE_NAMES.PHP BOTH CALL IT DIRECTLY
-	public function getData($table){
+	public function getTableData($table){
 		
 		/* CREATE AN INSTANCE OF THE PDOMETHODS CLASS*/
 		$pdo = new PdoMethods();
@@ -20,19 +20,38 @@ class Crud extends PdoMethods{
 		if($records == 'error'){
 			return 'There has been and error processing your request';
 		}
-		else {
-			if(count($records) != 0){
-				return $this->createList($records);
-			}
-			else {
-				return 'no data found';
-			}
-		}
+        else {
+            return $records;
+        }
 	}
 
 
 	/***** THE REST OF THESE METHODS CAN BE PRIVATE BECAUSE THEY ARE CALLED WITHIN THE CLASS. */
 
+
+    public function addAdmin(){
+        $pdo = new PdoMethods();
+        $sql = "INSERT INTO Admins (name, email, password, status) VALUES (:name, :email, :password, :status)";
+
+        $hashedPassword = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        /* THESE BINDINGS ARE LATER INJECTED INTO THE SQL STATEMENT THIS PREVENTS AGAIN SQL INJECTIONS */
+	    $bindings = [
+            [':name',$_POST['name'],'str'],
+            [':email',$_POST['email'],'str'],
+            [':password',$hashedPassword,'str'],
+            [':status',$_POST['status'],'str']
+          ];
+
+        $result = $pdo->otherBinded($sql, $bindings);
+
+        /* HERE I AM RETURNING EITHER AN ERROR STRING OR A SUCCESS STRING */
+        if($result === 'error'){
+            return 'error';
+        }
+        else {
+            return '';
+        }
+    }
 
 	public function addContacts(){
 	
@@ -126,20 +145,19 @@ class Crud extends PdoMethods{
 		}
 	}
 
-	public function deleteNames($post){
-		$error = false;
-		if(isset($post['inputDeleteChk'])){
-			foreach($post['inputDeleteChk'] as $id){
-				$pdo = new PdoMethods();
+	public function deleteContacts(){
+        if(isset($_POST['chkbx'])){
+            $error = false;
+            foreach($_POST['chkbx'] as $id){
+                $pdo = new PdoMethods();
 
-				$sql = "DELETE FROM short_names WHERE id=:id";
-				
-				$bindings = [
-					[':id', $id, 'int'],
-				];
+                $sql = "DELETE FROM Contacts WHERE id=:id";
+                
+                $bindings = [
+                    [':id', $id, 'int'],
+                ];
 
-
-				$result = $pdo->otherBinded($sql, $bindings);
+                $result = $pdo->otherBinded($sql, $bindings);
 
 				if($result === 'error'){
 					$error = true;
@@ -147,10 +165,42 @@ class Crud extends PdoMethods{
 				}
 			}
 			if($error){
-				return "There was an error in deleting a name or names";
+				return "<p>Could not delete the contact(s)</p>";
 			}
 			else {
-				return "All names deleted";
+				return "<p>Contact(s) deleted</p>";
+			}
+
+		}
+		else {
+			return "No names selected to delete";
+		}
+	}
+
+    public function deleteAdmins(){
+        if(isset($_POST['chkbx'])){
+            $error = false;
+            foreach($_POST['chkbx'] as $id){
+                $pdo = new PdoMethods();
+
+                $sql = "DELETE FROM Admins WHERE id=:id";
+                
+                $bindings = [
+                    [':id', $id, 'int'],
+                ];
+
+                $result = $pdo->otherBinded($sql, $bindings);
+
+				if($result === 'error'){
+					$error = true;
+					break;
+				}
+			}
+			if($error){
+				return "<p>Could not delete the admin(s)</p>";
+			}
+			else {
+				return "<p>Admin(s) deleted</p>";
 			}
 
 		}
@@ -160,12 +210,32 @@ class Crud extends PdoMethods{
 	}
 
 	/*THIS FUNCTION TAKES THE DATA FROM THE DATABASE AND RETURN AN UNORDERED LIST OF THE DATA*/
-	private function createList($records){
-		$list = '<ol>';
-		foreach ($records as $row){
-			$list .= "<li>Name: {$row['first_name']} {$row['last_name']} - Eye Color: {$row['eye_color']} - State: {$row['state']}</li>";
-		}
-		$list .= '</ol>';
-		return $list;
+	public function createTableData($records){
+        $tableData="";
+	    foreach($records as $row){
+           $tableData.= "<tr><td>{$row['name']}</td>
+            <td>{$row['address']}</td>
+            <td>{$row['city']}</td>
+            <td>{$row['state']}</td>
+            <td>{$row['phone']}</td>
+            <td>{$row['email']}</td>
+            <td>{$row['dob']}</td>
+            <td>{$row['contacts']}</td>
+            <td>{$row['age']}</td>
+            <td><input type='checkbox' name='chkbx[]' value='{$row['id']}' /></td></tr>";
+        }
+        return $tableData;
+	}
+
+    public function createTableData1($records){
+        $tableData="";
+	    foreach($records as $row){
+           $tableData.= "<tr><td>{$row['name']}</td>
+            <td>{$row['email']}</td>
+            <td>{$row['password']}</td>
+            <td>{$row['status']}</td>
+            <td><input type='checkbox' name='chkbx[]' value='{$row['id']}' /></td></tr>";
+        }
+        return $tableData;
 	}
 }

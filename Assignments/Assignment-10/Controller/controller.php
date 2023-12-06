@@ -2,7 +2,9 @@
 require_once '../classes/Crud.php';
 require_once '../classes/Page.php';
 require_once '../pages/addContact.php';
-
+require_once '../pages/addAdmin.php';
+require_once '../pages/deleteContacts.php';
+require_once '../pages/deleteAdmins.php';
 
 function login(){
 
@@ -49,7 +51,7 @@ function addAdmin(){
 	$pageData['title'] = "Add Admin";
 	$pageData['heading'] = "Add Admin";
 	$pageData['nav'] = $page->nav();
-	$pageData['content'] = require_once '../pages/addAdmin.php';
+	$pageData['content'] = init_addAdmin();
 	$pageData['js'] = "";
 	return $pageData;
 }
@@ -60,19 +62,19 @@ function deleteAdmins(){
 	$pageData['title'] = "Delete Admin";
 	$pageData['heading'] = "Delete Admin";
 	$pageData['nav'] = $page->nav();
-	$pageData['content'] = require_once '../pages/deleteAdmins.php';
-	$pageData['js'] = "<script src='public/js/main.js'></script>";
+	$pageData['content'] = initDeleteAdmins();
+	$pageData['js'] = "";
 	return $pageData;
 }
 
 function deleteContacts(){
-    require_once '../pages/deleteContacts.php';
+    
 	$page = new Page();
 
 	$pageData['title'] = "Deletee Contacts";
 	$pageData['heading'] = "Delete Contacts";
 	$pageData['nav'] = $page->nav();
-	$pageData['content'] = init();
+	$pageData['content'] =  initDeleteContacts();
 	$pageData['js'] = "";
 	return $pageData;
 }

@@ -8,7 +8,7 @@ class StickyForm extends Validation {
 		foreach($elementsArr as $k=>$v){
 			
 			/*IF THE TYPE IS TEXT THEN IT IS A TEXTBOX OR TEXTAREA FIELD THE TYPE IS DETERMINED BY WHAT IS SET UP IN THE ELEMENTS ARRAY */
-			if($elementsArr[$k]['type'] == "text"){
+			if($elementsArr[$k]['type'] == "text" || $elementsArr[$k]['type'] == "password"){
 				$error = $this->checkFormat($GlobalPost[$k], $elementsArr[$k]['regex']);
 				if($error == 'error'){
 					$elementsArr[$k]['errorOutput'] = $elementsArr[$k]['errorMessage'];
@@ -16,6 +16,7 @@ class StickyForm extends Validation {
 				}
 				/*HERE I PUT THE VALUES INTO THE ARRAY TO MAKE IS STICKY.*/
 				$elementsArr[$k]['value'] = htmlentities($GlobalPost[$k]);
+
 			}
 
 			/*IF THE TYPE IS SELECT THEN IT CHECKS TO MAKE SURE WHAT WAS SELECTED IS STICY.  IT DOES NOT CHECK ANY VALIDATION ISSUES AS A SELECT BOX TECHNICALLY WILL BE CORRECT. HOWEVER IT COULD BE SET UP TO CHECK FOR CORRECT INPUT */ 
