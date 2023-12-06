@@ -3,6 +3,7 @@
 /* HERE I REQUIRE AND USE THE STICKYFORM CLASS THAT DOES ALL THE VALIDATION AND CREATES THE STICKY FORM.  THE STICKY FORM CLASS USES THE VALIDATION CLASS TO DO THE VALIDATION WORK.*/
 
 require_once('../classes/StickyForm.php');
+require_once('../classes/Crud.php');
     $stickyForm = new StickyForm();
 
 
@@ -21,7 +22,7 @@ $elementsArr = [
           "regex"=>"name"
       ],
       "address"=>[
-        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Address cannot be blank and must start with numbers</span>",
+        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Address cannot be blank and must start with numbers end with street name</span>",
         "errorOutput"=>"",
         "type"=>"text",
         "value"=>"123 street",
@@ -29,7 +30,7 @@ $elementsArr = [
       ],
 
       "city"=>[
-        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>city cannot be blank</span>",
+        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>city cannot be blank. Number cannot be used</span>",
         "errorOutput"=>"",
         "type"=>"text",
         "value"=>"anywhere",
@@ -52,7 +53,7 @@ $elementsArr = [
     ],
     
     "email"=>[
-        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot be blank</span>",
+        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot have special charcters or blank, and must have a domain name</span>",
         "errorOutput"=>"",
         "type"=>"text",
         "value"=>"iahmed3@test.com",
@@ -115,49 +116,10 @@ function init_addContact(){
 /*THIS FUNCTION CAN BE CALLED TO ADD DATA TO THE DATABASE */
 function addData($post){
     global $elementsArr, $stickyForm;
-    return getForm("<p>Contact Information Added</p>", $elementsArr);
-  /* IF EVERYTHING WORKS ADD THE DATA HERE TO THE DATABASE HERE USING THE $_POST SUPER GLOBAL ARRAY */
-      //print_r($_POST);
-      require_once('Classes/Pdo_methods.php'); 
 
-      $pdo = new PdoMethods();
-
-      $sql = "INSERT INTO Contacts (name, address, city, state, phone, email, dob, contacts, age) VALUES (:name, :address, :city, :state, :phone, :email, :dob, :contacts, :age)";
-
-      /* THIS TAKE THE ARRAY OF CHECK BOXES AND PUT THE VALUES INTO A STRING SEPERATED BY COMMAS  */
-      if(isset($_POST['contacts'])){
-        $contacts = "";
-        foreach($post['contacts'] as $v){
-          $contacts .= $v.",";
-        }
-        /* REMOVE THE LAST COMMA FROM THE CONTACTS */
-        $contacts = substr($contacts, 0, -1);
-      }
-      else {
-        $contacts = "";
-      }
-
-      if(isset($_POST['age'])){
-        $age = $_POST['age'];
-      }
-      else {
-        $age = "";
-      }
-
-
-      $bindings = [
-        [':name',$post['name'],'str'],
-        [':address',$post['address'],'str'],
-        [':city',$post['city'],'str'],
-        [':state',$post['state'],'str'],
-        [':phone',$post['phone'],'str'],
-        [':email',$post['email'],'str'],
-        [':dob',$post['dob'],'str'],
-        [':contacts',$contacts,'str'],
-        [':age',$age,'str']
-      ];
-
-      $result = $pdo->otherBinded($sql, $bindings);
+  // IF EVERYTHING WORKS ADD THE DATA
+      $crud = new Crud();
+      $result=$crud->addContacts();
 
       if($result == "error"){
         return getForm("<p>There was a problem processing your form</p>", $elementsArr);

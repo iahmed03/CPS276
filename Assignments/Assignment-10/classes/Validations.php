@@ -34,7 +34,7 @@ class Validation{
 	}
 
     private function city($value){
-		$match = preg_match('/^[a-zA-Z]+$/', $value);
+		$match = preg_match('/^[a-zA-Z\s]+$/', $value);
 		return $this->setError($match);
 	}
 

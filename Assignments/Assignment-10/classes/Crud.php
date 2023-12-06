@@ -34,35 +34,58 @@ class Crud extends PdoMethods{
 	/***** THE REST OF THESE METHODS CAN BE PRIVATE BECAUSE THEY ARE CALLED WITHIN THE CLASS. */
 
 
-	private function addName(){
+	public function addContacts(){
 	
 		$pdo = new PdoMethods();
-
+    
 		/* HERE I CREATE THE SQL STATEMENT I AM BINDING THE PARAMETERS */
-		$sql = "INSERT INTO short_names (first_name, last_name, eye_color, state) VALUES (:fname, :lname, :eyecolor, :state)";
+		$sql = "INSERT INTO Contacts (name, address, city, state, phone, email, dob, contacts, age) VALUES (:name, :address, :city, :state, :phone, :email, :dob, :contacts, :age)";
+		
+        if(isset($_POST['contacts'])){
+            $contacts = "";
+            foreach($_POST['contacts'] as $v){
+              $contacts .= $v.",";
+            }
+            /* REMOVE THE LAST COMMA FROM THE CONTACTS */
+            $contacts = substr($contacts, 0, -1);
+          }
+          else {
+            $contacts = "";
+          }
+    
+          if(isset($_POST['age'])){
+            $age = $_POST['age'];
+          }
+          else {
+            $age = "";
+          }
 
-			 
 	    /* THESE BINDINGS ARE LATER INJECTED INTO THE SQL STATEMENT THIS PREVENTS AGAIN SQL INJECTIONS */
 	    $bindings = [
-			[':fname',$_POST['fname'],'str'],
-			[':lname',$_POST['lname'],'str'],
-			[':eyecolor',$_POST['color'],'str'],
-			[':state',$_POST['state'],'str']
-		];
+            [':name',$_POST['name'],'str'],
+            [':address',$_POST['address'],'str'],
+            [':city',$_POST['city'],'str'],
+            [':state',$_POST['state'],'str'],
+            [':phone',$_POST['phone'],'str'],
+            [':email',$_POST['email'],'str'],
+            [':dob',$_POST['dob'],'str'],
+            [':contacts',$contacts,'str'],
+            [':age',$age,'str']
+          ];
 
 		/* I AM CALLING THE OTHERBINDED METHOD FROM MY PDO CLASS */
 		$result = $pdo->otherBinded($sql, $bindings);
 
 		/* HERE I AM RETURNING EITHER AN ERROR STRING OR A SUCCESS STRING */
 		if($result === 'error'){
-			return 'There was an error adding the name';
+			return 'error';
 		}
 		else {
-			return 'Name has been added';
+			return '';
 		}
 	}
 
-	private function updateNames($post){
+	public function updateNames($post){
 		$error = false;
 
 		if(isset($post['inputDeleteChk'])){
@@ -103,7 +126,7 @@ class Crud extends PdoMethods{
 		}
 	}
 
-	private function deleteNames($post){
+	public function deleteNames($post){
 		$error = false;
 		if(isset($post['inputDeleteChk'])){
 			foreach($post['inputDeleteChk'] as $id){
@@ -144,30 +167,5 @@ class Crud extends PdoMethods{
 		}
 		$list .= '</ol>';
 		return $list;
-	}
-	
-
-	/*THIS FUNCTION TAKES THE DATA AND RETURNS THE DATA IN INPUT ELEMENTS SO IT CAN BE EDITED.  */
-	private function createInput($records){
-		$output = "<form method='post' action='update_delete_name.php'>";
-		$output .= "<input class='btn btn-success' type='submit' name='update' value='Update'>";
-		$output .= "<input class='btn btn-danger' type='submit' name='delete' value='Delete'>";
-		$output .= "<table class='table table-bordered table-striped'><thead><tr>";
-		$output .= "<th>First Name</th><th>Last Name</th><th>Eye Color</th><th>State</th><th>Update/Delete</th><tbody>";
-		foreach ($records as $row){
-			$output .= "<tr><td><input type='text' class='form-control' name='fname^^{$row['id']}' value='{$row['first_name']}'></td>";
-
-			$output .= "<td><input type='text' class='form-control' name='lname^^{$row['id']}' value='{$row['last_name']}'></td>";
-
-			$output .= "<td><input type='text' class='form-control' name='color^^{$row['id']}' value='{$row['eye_color']}'></td>";
-
-			
-			$output .= "<td><input type='text' class='form-control' name='state^^{$row['id']}' value='{$row['state']}'></td>";
-
-			$output .= "<td><input type='checkbox' name='inputDeleteChk[]' value='{$row['id']}'></td></tr>";
-		}
-		
-		$output .= "</tbody></table></form>";
-		return $output;
 	}
 }
