@@ -3,6 +3,7 @@
 
 require_once('classes/StickyForm.php');
 require_once('classes/Pdo_methods.php');
+require_once('deleteAdmins.php');
     $stickyForm = new StickyForm();
 
 
@@ -56,7 +57,11 @@ function init_addAdmin(){
 
     /* THE ELEMENTS ARRAY HAS A MASTER STATUS AREA. IF THERE ARE ANY ERRORS FOUND THE STATUS IS CHANGED TO "ERRORS" FROM THE DEFAULT OF "NOERRORS".  DEPENDING ON WHAT IS RETURNED DEPENDS ON WHAT HAPPENS NEXT.  IN THIS CASE THE RETURN MESSAGE HAS "NO ERRORS" SO WE HAVE NO PROBLEMS WITH OUR VALIDATION AND WE CAN SUBMIT THE FORM */
     if($elementsArr['masterStatus']['status'] == "noerrors"){
-      
+      //return checkData();
+      if (checkData() === "error"){
+        $elementsArr['email']['errorOutput'] = "<span style='color: red; margin-left: 15px;'>this Email id is in use. try with another id</span>";
+        return getAdminForm("",$elementsArr);
+      }
       /*addData() IS THE METHOD TO CALL TO ADD THE FORM INFORMATION TO THE DATABASE (NOT WRITTEN IN THIS EXAMPLE) THEN WE CALL THE GETFORM METHOD WHICH RETURNS AND ACKNOWLEDGEMENT AND THE ORGINAL ARRAY (NOT MODIFIED). THE ACKNOWLEDGEMENT IS THE FIRST PARAMETER THE ELEMENTS ARRAY IS THE ELEMENTS ARRAY WE CREATE (AGAIN SEE BELOW) */
       return addAdminData($_POST);
 
@@ -72,6 +77,24 @@ function init_addAdmin(){
   else {
       return getAdminForm("", $elementsArr);
     } 
+}
+
+function checkData(){
+  $pdo = new PdoMethods();
+  $sql = "SELECT * FROM Admins";
+  $records = $pdo->selectNotBinded($sql);
+  if ($records==0){
+    return "";
+  }
+  else {
+    foreach($records as $row){
+      if ($_POST['email'] === $row['email']){
+        return "error";
+      }
+    }
+
+  }
+  return "";
 }
 
 /*THIS FUNCTION CAN BE CALLED TO ADD DATA TO THE DATABASE */
@@ -112,15 +135,15 @@ $options = $stickyForm->createOptions($elementsArr['status']);
 $form = <<<HTML
     <form method="post" action="">
     <div class="form-group">
-        <label for="name">Username (letters Only)</label>
+        <label for="name">Username (letters Only) {$elementsArr["name"]["errorOutput"]}</label>
         <input type="text" class="form-control" name="name" value='{$elementsArr["name"]["value"]}'>
     </div>
     <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">Email {$elementsArr["email"]["errorOutput"]}</label>
         <input type="text" class="form-control" name="email" value='{$elementsArr["email"]["value"]}'>
     </div>
     <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">Password {$elementsArr["password"]["errorOutput"]}</label>
         <input type="password" class="form-control" name="password" value='{$elementsArr["password"]["value"]}'>
  
     <div class="form-group">
