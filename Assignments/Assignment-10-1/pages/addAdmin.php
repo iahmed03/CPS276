@@ -1,8 +1,8 @@
 <?php
 /* HERE I REQUIRE AND USE THE STICKYFORM CLASS THAT DOES ALL THE VALIDATION AND CREATES THE STICKY FORM.  THE STICKY FORM CLASS USES THE VALIDATION CLASS TO DO THE VALIDATION WORK.*/
 
-require_once('../classes/StickyForm.php');
-require_once('../classes/Crud.php');
+require_once('classes/StickyForm.php');
+require_once('classes/Pdo_methods.php');
     $stickyForm = new StickyForm();
 
 
@@ -79,16 +79,27 @@ function addAdminData($post){
     global $elementsArr, $stickyForm;
 
   // IF EVERYTHING WORKS ADD THE DATA
-      $crud = new Crud();
-      $result=$crud->addAdmin();
+  $pdo = new PdoMethods();
+  $sql = "INSERT INTO Admins (name, email, password, status) VALUES (:name, :email, :password, :status)";
 
-      if($result == "error"){
-        return getAdminForm("<p>There was a problem processing your form</p>", $elementsArr);
-      }
-      else {
-        return getAdminForm("<p>Admin Information Added</p>", $elementsArr);
-      }
+  $hashedPassword = password_hash($_POST['password'], PASSWORD_BCRYPT);
+  /* THESE BINDINGS ARE LATER INJECTED INTO THE SQL STATEMENT THIS PREVENTS AGAIN SQL INJECTIONS */
+$bindings = [
+      [':name',$_POST['name'],'str'],
+      [':email',$_POST['email'],'str'],
+      [':password',$hashedPassword,'str'],
+      [':status',$_POST['status'],'str']
+    ];
 
+  $result = $pdo->otherBinded($sql, $bindings);
+
+  /* HERE I AM RETURNING EITHER AN ERROR STRING OR A SUCCESS STRING */
+  if($result === 'error'){
+    return getAdminForm("<p>There was a problem processing your form</p>", $elementsArr);
+  }
+  else {
+    return getAdminForm("<p>Admin Information Added</p>", $elementsArr);
+  }
 }
    
 
@@ -127,7 +138,6 @@ $form = <<<HTML
 return $acknowledgement."<br>".$form;
 
 }
-
 
 ?>
 
