@@ -10,17 +10,17 @@ $elementsArr = [
 
 function init_login(){
     global $elementsArr;
+    sessionCheck();
     if (isset($_POST['submit'])){
         $check=checkCredentials();
         if ($check == "error"){
             return getLoginForm($elementsArr['error']);
         }
         else{
-            session_start();
             $_SESSION['login']="success";
             $_SESSION['name']=$check['name'];
             $_SESSION['status']=$check['status'];
-            return $_SESSION;
+            header("Location: index.php");
         }
     }
     return getLoginForm();
@@ -60,6 +60,18 @@ function checkCredentials(){
     }
     return "error";
   
+}
+
+function sessionCheck(){
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    }
+    else
+    {
+        session_destroy();
+        session_start(); 
+    }
 }
 
 ?>

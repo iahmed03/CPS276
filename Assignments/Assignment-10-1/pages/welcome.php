@@ -1,5 +1,5 @@
 <?php
-function init_welcome(){
-    return "in home";
+function init_welcome($name){
+    return "Welcome"." ".$name;
 }
 ?>
