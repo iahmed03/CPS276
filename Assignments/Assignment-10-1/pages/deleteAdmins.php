@@ -1,5 +1,8 @@
 <?php
+// HERE I REQUIRE PDO CLASS WHICH COMMUNICATES WITH THE DATABASE.
 require_once 'classes/Pdo_methods.php';
+
+// FUNCTION THAT INITIATES EVERYTHING.
 function initDeleteAdmins(){
             if(isset($_POST['delete'])){
             $msg = deleteAdmins();
@@ -10,6 +13,7 @@ function initDeleteAdmins(){
         }
 }
 
+// FUNCTION THAT TAKES IN THE DATA RETRIVED FROM THE DATABASE AND LAYOUT ON THE INDEX PAGE AS A TABLE
  function tableAdmin($tableData){
     $output = <<<HTML
     <form method='post' action=''>
@@ -33,7 +37,7 @@ HTML;
 
     return $output;
 }
-
+// FUNCTION THAT PASS IN THE ROWS OF DATA FROM TABLE ONTO THE TABLE ABOVE
  function getAdmins(){
 
     $records = displayAdmins();
@@ -45,7 +49,7 @@ HTML;
     }
 
 }
-
+// FUNCTION THAT DELETES DATA FROM TABLE
 function deleteAdmins(){
     if(isset($_POST['chkbx'])){
         $error = false;
@@ -78,6 +82,7 @@ function deleteAdmins(){
     }
 }
 
+// FUNCTION THAT RETRIVES DATA FROM DATABASE
 function displayAdmins(){
     /* CREATE AN INSTANCE OF THE PDOMETHODS CLASS*/
 $pdo = new PdoMethods();
@@ -97,6 +102,7 @@ else {
 }
 }
 
+// FUNCTION THAT PROCESS DATA
 function processData($records){
     $tableData="";
     foreach($records as $row){

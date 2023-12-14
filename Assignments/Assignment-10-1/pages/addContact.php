@@ -1,13 +1,13 @@
 <?php
 
-/* HERE I REQUIRE AND USE THE STICKYFORM CLASS THAT DOES ALL THE VALIDATION AND CREATES THE STICKY FORM.  THE STICKY FORM CLASS USES THE VALIDATION CLASS TO DO THE VALIDATION WORK.*/
+/* HERE I REQUIRE AND USE THE STICKYFORM AND PDO CLASS. STICKFORM DOES ALL THE VALIDATION AND CREATES THE STICKY FORM, WHILE PDO CLASS COMMUNICATE WITH DATABASE */
 
 require_once('classes/StickyForm.php');
 require_once('classes/Pdo_methods.php');
     $stickyForm = new StickyForm();
 
 
-/* THIS IS THE DATA OF THE FORM.  IT IS A MULTI-DIMENTIONAL ASSOCIATIVE ARRAY THAT IS USED TO CONTAIN FORM DATA AND ERROR MESSAGES.   EACH SUB ARRAY IS NAMED BASED UPON WHAT FORM FIELD IT IS ATTACHED TO. FOR EXAMPLE, "NAME" GOES TO THE TEXT FIELDS WITH THE NAME ATTRIBUTE THAT HAS THE VALUE OF "NAME". NOTICE THE TYPE IS "TEXT" FOR TEXT FIELD.  DEPENDING ON WHAT HAPPENS THIS ASSOCIATE ARRAY IS UPDATED.*/
+/* THIS IS THE DATA OF THE FORM.  IT IS A MULTI-DIMENTIONAL ASSOCIATIVE ARRAY THAT IS USED TO CONTAIN FORM DATA AND ERROR MESSAGES.   EACH SUB ARRAY IS NAMED BASED UPON WHAT FORM FIELD IT IS ATTACHED TO.*/
 
 $elementsArr = [
     "masterStatus"=>[
@@ -22,7 +22,7 @@ $elementsArr = [
           "regex"=>"name"
       ],
       "address"=>[
-        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Address cannot be blank and must start with numbers end with street name</span>",
+        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Address cannot be blank and must be a valid address</span>",
         "errorOutput"=>"",
         "type"=>"text",
         "value"=>"123 street",
@@ -39,13 +39,13 @@ $elementsArr = [
 
       "state"=>[
         "type"=>"select",
-        "options"=>["mi"=>"Michigan","oh"=>"Ohio","pa"=>"Pennslyvania","tx"=>"Texas"],
-            "selected"=>"oh",
+        "options"=>["MI"=>"Michigan","OH"=>"Ohio","PA"=>"Pennslyvania","TX"=>"Texas"],
+            "selected"=>"OH",
             "regex"=>"state"
         ],
 
       "phone"=>[
-          "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Phone cannot be blank and must be a valid phone number</span>",
+          "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Phone cannot be blank and must be a written as 999.999.9999</span>",
       "errorOutput"=>"",
       "type"=>"text",
           "value"=>"999.999.9999",
@@ -53,7 +53,7 @@ $elementsArr = [
     ],
     
     "email"=>[
-        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot have special charcters or blank, and must have a domain name</span>",
+        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot be blank, and must be written as proper email</span>",
         "errorOutput"=>"",
         "type"=>"text",
         "value"=>"iahmed3@test.com",
@@ -83,25 +83,25 @@ $elementsArr = [
       ]
   ];
 
-/*THE INIT FUNCTION IS WRITTEN TO START EVERYTHING OFF IT IS CALLED FROM THE INDEX.PHP PAGE */
+/*THE INIT FUNCTION IS WRITTEN TO START EVERYTHING. CALLED FROM ROUTES PAGE*/
 function init_addContact(){
     global $elementsArr, $stickyForm;
   /* IF THE FORM WAS SUBMITTED DO THE FOLLOWING  */
   if(isset($_POST['submit'])){
 
-    /*THIS METHODS TAKE THE POST ARRAY AND THE ELEMENTS ARRAY (SEE BELOW) AND PASSES THEM TO THE VALIDATION FORM METHOD OF THE STICKY FORM CLASS.  IT UPDATES THE ELEMENTS ARRAY AND RETURNS IT, THIS IS STORED IN THE $postArr VARIABLE */
+    /*THIS METHODS TAKE THE POST ARRAY AND THE ELEMENTS ARRAY (SEE BELOW) AND PASSES THEM TO THE VALIDATION FORM METHOD OF THE STICKY FORM CLASS.*/
     $postArr = $stickyForm->validateForm($_POST, $elementsArr);
     $elementsArr=$postArr;
 
-    /* THE ELEMENTS ARRAY HAS A MASTER STATUS AREA. IF THERE ARE ANY ERRORS FOUND THE STATUS IS CHANGED TO "ERRORS" FROM THE DEFAULT OF "NOERRORS".  DEPENDING ON WHAT IS RETURNED DEPENDS ON WHAT HAPPENS NEXT.  IN THIS CASE THE RETURN MESSAGE HAS "NO ERRORS" SO WE HAVE NO PROBLEMS WITH OUR VALIDATION AND WE CAN SUBMIT THE FORM */
+    /* THE ELEMENTS ARRAY HAS A MASTER STATUS AREA. IF THERE ARE ANY ERRORS FOUND THE STATUS IS CHANGED TO "ERRORS" FROM THE DEFAULT OF "NOERRORS".*/
     if($elementsArr['masterStatus']['status'] == "noerrors"){
       
-      /*addData() IS THE METHOD TO CALL TO ADD THE FORM INFORMATION TO THE DATABASE (NOT WRITTEN IN THIS EXAMPLE) THEN WE CALL THE GETFORM METHOD WHICH RETURNS AND ACKNOWLEDGEMENT AND THE ORGINAL ARRAY (NOT MODIFIED). THE ACKNOWLEDGEMENT IS THE FIRST PARAMETER THE ELEMENTS ARRAY IS THE ELEMENTS ARRAY WE CREATE (AGAIN SEE BELOW) */
+      /*addData() IS THE METHOD TO CALL TO ADD THE FORM INFORMATION TO THE DATABASE */
       return addData($_POST);
 
     }
     else{
-      /* IF THERE WAS A PROBLEM WITH THE FORM VALIDATION THEN THE MODIFIED ARRAY ($postArr) WILL BE SENT AS THE SECOND PARAMETER.  THIS MODIFIED ARRAY IS THE SAME AS THE ELEMENTS ARRAY BUT ERROR MESSAGES AND VALUES HAVE BEEN ADDED TO DISPLAY ERRORS AND MAKE IT STICKY */
+      /* IF THERE WAS A PROBLEM WITH THE FORM VALIDATION THEN THE MODIFIED ARRAY ($postArr) WILL BE SENT AS THE SECOND PARAMETER.  */
       return getForm("",$elementsArr);
     }
     
@@ -224,7 +224,6 @@ $form = <<<HTML
         
 
     <p>Please select an age range (you must select one):</p>
-    {$elementsArr['age']['errorOutput']}
     <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="age" id="age1" value="10-18" {$elementsArr['age']['value']['10-18']}>
       <label class="form-check-label" for="age1">10-18</label>
@@ -243,6 +242,7 @@ $form = <<<HTML
     <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="age" id="age4" value="51+" {$elementsArr['age']['value']['51+']}>
       <label class="form-check-label" for="age4">51+</label>
+      {$elementsArr['age']['errorOutput']}
     </div>
 
     <div>

@@ -1,5 +1,7 @@
 <?php
 require_once 'classes/Pdo_methods.php';
+
+// FUNCTION THAT STARTS EVERYTHING
 function initDeleteContacts(){
             if(isset($_POST['delete'])){
             $msg = deleteContacts();
@@ -9,7 +11,7 @@ function initDeleteContacts(){
             return getContacts();
         }
 }
-
+// FUNCTION THAT GETS DATA AND DISPLAYS IT IN THE FORM OF TABLE
  function table($tableData){
     $output = <<<HTML
     <form method='post' action=''>
@@ -38,7 +40,7 @@ HTML;
 
     return $output;
 }
-
+// FUNCTION THAT PUSH THE RETRIVED DATA INTO THE ABOVE TABLE WHICH IS TO BE LAYED OUT
  function getContacts(){
 
     $records = displayContacts();
@@ -51,6 +53,7 @@ HTML;
 
 }
 
+// FUNCTION THAT DELETES DATA
 function deleteContacts(){
     if(isset($_POST['chkbx'])){
         $error = false;
@@ -83,6 +86,7 @@ function deleteContacts(){
     }
 }
 
+// FUNCTION THAT DISPLAYS DATA
 function displayContacts(){
     		/* CREATE AN INSTANCE OF THE PDOMETHODS CLASS*/
 		$pdo = new PdoMethods();
@@ -102,6 +106,7 @@ function displayContacts(){
         }
 }
 
+// FUNCTION THAT PROCESS DATA
 function processData($records){
     $tableData="";
     foreach($records as $row){

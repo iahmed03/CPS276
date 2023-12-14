@@ -18,8 +18,8 @@ require_once 'pages/routes.php';
   <body>
     <div class="container">
       <?php 
-        echo "<h1>{$pageData['heading']}</h1>";
         echo $pageData['nav'];
+        echo "<h1>{$pageData['heading']}</h1>";
         print_r($pageData['content']);
       ?>
     </div>

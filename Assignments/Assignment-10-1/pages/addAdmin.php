@@ -1,5 +1,5 @@
 <?php
-/* HERE I REQUIRE AND USE THE STICKYFORM CLASS THAT DOES ALL THE VALIDATION AND CREATES THE STICKY FORM.  THE STICKY FORM CLASS USES THE VALIDATION CLASS TO DO THE VALIDATION WORK.*/
+/* HERE I REQUIRE AND USE THE STICKYFORM AND PDO CLASS THAT DOES ALL THE VALIDATION AND COMMUNICATION WITH THE DATABASE RESPECTIVELY.*/
 
 require_once('classes/StickyForm.php');
 require_once('classes/Pdo_methods.php');
@@ -7,7 +7,7 @@ require_once('deleteAdmins.php');
     $stickyForm = new StickyForm();
 
 
-/* THIS IS THE DATA OF THE FORM.  IT IS A MULTI-DIMENTIONAL ASSOCIATIVE ARRAY THAT IS USED TO CONTAIN FORM DATA AND ERROR MESSAGES.   EACH SUB ARRAY IS NAMED BASED UPON WHAT FORM FIELD IT IS ATTACHED TO. FOR EXAMPLE, "NAME" GOES TO THE TEXT FIELDS WITH THE NAME ATTRIBUTE THAT HAS THE VALUE OF "NAME". NOTICE THE TYPE IS "TEXT" FOR TEXT FIELD.  DEPENDING ON WHAT HAPPENS THIS ASSOCIATE ARRAY IS UPDATED.*/
+/* THIS IS THE DATA OF THE FORM.  IT IS A MULTI-DIMENTIONAL ASSOCIATIVE ARRAY THAT IS USED TO CONTAIN FORM DATA AND ERROR MESSAGES.*/
 
 $elementsArr = [
     "masterStatus"=>[
@@ -23,7 +23,7 @@ $elementsArr = [
       ],
 
       "email"=>[
-        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot have special charcters or blank, and must have a domain name</span>",
+        "errorMessage"=>"<span style='color: red; margin-left: 15px;'>cannot be blank, and must be written as proper email</span>",
         "errorOutput"=>"",
         "type"=>"text",
         "value"=>"iahmed3@test.com",
@@ -51,18 +51,16 @@ function init_addAdmin(){
   /* IF THE FORM WAS SUBMITTED DO THE FOLLOWING  */
   if(isset($_POST['submit'])){
 
-    /*THIS METHODS TAKE THE POST ARRAY AND THE ELEMENTS ARRAY (SEE BELOW) AND PASSES THEM TO THE VALIDATION FORM METHOD OF THE STICKY FORM CLASS.  IT UPDATES THE ELEMENTS ARRAY AND RETURNS IT, THIS IS STORED IN THE $postArr VARIABLE */
+    /*THIS METHODS TAKE THE POST ARRAY AND THE ELEMENTS ARRAY (SEE BELOW) AND PASSES THEM TO THE VALIDATION FORM METHOD OF THE STICKY FORM CLASS. */
     $postArr = $stickyForm->validateForm($_POST, $elementsArr);
     $elementsArr=$postArr;
 
-    /* THE ELEMENTS ARRAY HAS A MASTER STATUS AREA. IF THERE ARE ANY ERRORS FOUND THE STATUS IS CHANGED TO "ERRORS" FROM THE DEFAULT OF "NOERRORS".  DEPENDING ON WHAT IS RETURNED DEPENDS ON WHAT HAPPENS NEXT.  IN THIS CASE THE RETURN MESSAGE HAS "NO ERRORS" SO WE HAVE NO PROBLEMS WITH OUR VALIDATION AND WE CAN SUBMIT THE FORM */
+    /* THE ELEMENTS ARRAY HAS A MASTER STATUS AREA. IF THERE ARE ANY ERRORS FOUND THE STATUS IS CHANGED TO "ERRORS" FROM THE DEFAULT OF "NOERRORS".*/
     if($elementsArr['masterStatus']['status'] == "noerrors"){
-      //return checkData();
       if (checkData() === "error"){
-        $elementsArr['email']['errorOutput'] = "<span style='color: red; margin-left: 15px;'>this Email id is in use. try with another id</span>";
-        return getAdminForm("",$elementsArr);
+        return getAdminForm("<p>that email already exits</p>",$elementsArr);
       }
-      /*addData() IS THE METHOD TO CALL TO ADD THE FORM INFORMATION TO THE DATABASE (NOT WRITTEN IN THIS EXAMPLE) THEN WE CALL THE GETFORM METHOD WHICH RETURNS AND ACKNOWLEDGEMENT AND THE ORGINAL ARRAY (NOT MODIFIED). THE ACKNOWLEDGEMENT IS THE FIRST PARAMETER THE ELEMENTS ARRAY IS THE ELEMENTS ARRAY WE CREATE (AGAIN SEE BELOW) */
+      /*addData() IS THE METHOD TO CALL TO ADD THE FORM INFORMATION TO THE DATABASE*/
       return addAdminData($_POST);
 
     }
