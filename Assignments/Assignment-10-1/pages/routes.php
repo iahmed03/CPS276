@@ -1,35 +1,40 @@
 <?php
+session_start();
 
-
-$pageData = [];
+$pageData = [
+	"nav"=>"",
+	"title"=>"",
+	"heading"=>"",
+	"content"=>""
+];
 $pageData['nav']="";
 
 $base = "https://russet-v8.wccnet.edu/~iahmed3/cps276/Assignments/Assignment-10-1/index.php?page=";
 
 $navAdmin = <<<NAV
-<nav style="background: #eee; height: 30px; border-radius: 5px; margin-bottom: 15px;">
-  <ul style="list-style: none">
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}addContact">Add Contact</a></li>
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}deleteContacts">Delete Contact(s)</a></li>
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}addAdmin">Add Admin</a></li>
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}deleteAdmins">Delete Admin(s)</a></li>
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}logout">Logout</a></li>
+<nav>
+  <ul class="nav">
+	<li class="nav-item"><a class="nav-link" href="{$base}addContact">Add Contact</a></li>
+	<li class="nav-item"><a class="nav-link" href="{$base}deleteContacts">Delete Contact(s)</a></li>
+	<li class="nav-item"><a class="nav-link" href="{$base}addAdmin">Add Admin</a></li>
+	<li class="nav-item"><a class="nav-link" href="{$base}deleteAdmins">Delete Admin(s)</a></li>
+	<li class="nav-item"><a class="nav-link" href="{$base}logout">Logout</a></li>
   </ul>
 </nav>
 NAV;
 
 $navStaff = <<<NAV
-<nav style="background: #eee; height: 30px; border-radius: 5px; margin-bottom: 15px;">
-  <ul style="list-style: none">
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}addContact">Add Contact</a></li>
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}deleteContacts">Delete Contacts</a></li>
-	<li style="display: inline; line-height: 30px; margin: 0 20px"><a href="{$base}logout">Logout</a></li>
+<nav>
+  <ul class="nav">
+	<li class="nav-item"><a class="nav-link" href="{$base}addContact">Add Contact</a></li>
+	<li class="nav-item"><a class="nav-link" href="{$base}deleteContacts">Delete Contacts</a></li>
+	<li class="nav-item"><a class="nav-link" href="{$base}logout">Logout</a></li>
   </ul>
 </nav>
 NAV;
 
 // CHECKS IF SESSION ALREADY STARTED AND IF STARTED, ASSIGNS THE NAVIGATIONS ACCORDING TO STATUS
-session_start();
+
 if(isset($_SESSION['login'])){
 	if ($_SESSION['status']=="Admin"){
 		$pageData['nav']=$navAdmin;
@@ -107,9 +112,12 @@ if(isset($_SESSION['login'])){
 function checkSessionstatus(){
 	global $base;
 	if ($_SESSION['status']=="Staff"){
-		session_destroy();
-				setcookie(session_name(), "", time() - 3600, "/");
-				header("Location: {$base}");
+		if(isset($_SESSION)) {  
+			session_unset();
+			session_destroy();
+			setcookie(session_name(), "", time() - 3600, "/");
+		}
+				header("Location: {$base}login");
 	}
 }
 

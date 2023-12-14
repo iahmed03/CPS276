@@ -18,7 +18,7 @@ $elementsArr = [
         "errorMessage"=>"<span style='color: red; margin-left: 15px;'>Name cannot be blank and must be a standard name</span>",
       "errorOutput"=>"",
       "type"=>"text",
-      "value"=>"Scott",
+      "value"=>"ahmed",
           "regex"=>"name"
       ],
 

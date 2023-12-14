@@ -1,9 +1,8 @@
 <?php
-
+// REQUIRING REQUIRED CLASSES FOR CARRYING OUT VARIOUS FUNCTIONS
 require_once "classes/Pdo_methods.php";
 require_once('classes/StickyForm.php');
     $stickyForm = new StickyForm();
-
 
 $elementsArr = [
     "masterStatus"=>[
@@ -21,10 +20,11 @@ $elementsArr = [
     "password"=>["value"=>"password", "type"=>""]
 ];
 
+// FUNCTION THAT MARKS THE INITIATION. HANDLES SUBMIT DATA
 function init_login(){
     global $elementsArr;
     global $stickyForm;
-    if(isset($_SESSION)) { 
+   if(isset($_SESSION)) {  // TO DESTROY ANY ONGOING SESSIONS. FOR INSTANCE IF A USER ALREADY LOGGED IN RETURNS BACK TO LOGIN PAGE. THIS IS NEVER EXECUTED SINCE SESSIONS ARE DESTROYED BEFORE THEY RETURN BACK TO LOGIN PAGE. IF SESSION ARE NOT DESTROYED, THIS WILL GIVE ERROR SINCE SESSION NOT STARTED TO DESTROY IT.
         session_destroy();
         setcookie(session_name(), "", time() - 3600, "/");
     }
@@ -52,6 +52,7 @@ function init_login(){
     return getLoginForm();
 }
 
+// FUNCTION THAT RETURNS LOGIN FORM
 function getLoginForm($error=null){
     global $elementsArr;
     $form = <<<HTML
@@ -72,7 +73,7 @@ function getLoginForm($error=null){
     return $form;
 }
 
-
+// FUNCTION THAT CHECK IF THE CREDINTIALS ENTERD MATCHES. IF YES ALLOWED TO ACCESS PAGES. ELSE RE LOGIN
 function checkCredentials(){
     $pdo = new PdoMethods();
     $sql = "SELECT * FROM Admins";
@@ -86,9 +87,4 @@ function checkCredentials(){
     }
     return "error";
 }
-
-function sessionCheck(){
-
-}
-
 ?>
